@@ -36,11 +36,15 @@ const formReducer = (state, action) => {
 const NewPlace = () => {
   const [formState, dispatch] = useReducer(formReducer, {
     inputs: {
-      title: {
+      judul: {
         value: "",
         isValid: false,
       },
-      description: {
+      deskripsi: {
+        value: "",
+        isValid: false,
+      },
+      alamat: {
         value: "",
         isValid: false,
       },
@@ -55,23 +59,37 @@ const NewPlace = () => {
       inputId: id,
     });
   }, []);
+
+  const placeSubmitHandler = (event) => {
+    event.preventDefault();
+    console.log(formState.inputs);
+  };
+
   return (
-    <form className="place-form">
+    <form className="place-form" onSubmit={placeSubmitHandler}>
       <Input
-        id="title"
+        id="judul"
         type="text"
-        label="Title"
+        label="Judul"
         element="input"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Titel yang Anda masukkan salah"
+        errorText="Masukkan judul"
         onInput={inputHandler}
       />
       <Input
-        id="description"
-        label="Description"
+        id="deskripsi"
+        label="Deskripsi"
         element="textarea"
         validators={[VALIDATOR_MINLENGTH(5)]}
         errorText="Masukkan minimal lima karakter"
+        onInput={inputHandler}
+      />
+      <Input
+        id="alamat"
+        label="Alamat"
+        element="textarea"
+        validators={[VALIDATOR_REQUIRE()]}
+        errorText="Masukkan alamat"
         onInput={inputHandler}
       />
       <Button type="submit" disabled={!formState.isValid}>
