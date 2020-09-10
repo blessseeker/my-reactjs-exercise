@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import { useForm } from "../../shared/hooks/form";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -12,11 +13,11 @@ import "./PlaceForm.css";
 const DUMMY_PLACES = [
   {
     id: "p1",
-    title: "Batu Kuda",
-    description: "Wisata Pinus",
+    judul: "Batu Kuda",
+    deskripsi: "Wisata Pinus",
     imageUrl:
       "https://cdn.ayobandung.com/images-bandung/post/articles/2018/01/06/27192/whatsapp_image_2018-01-06_at_20.05.17.jpeg",
-    address: "Cibiru Wetan, Cileunyi, Bandung, Jawa Barat 40625",
+    alamat: "Cibiru Wetan, Cileunyi, Bandung, Jawa Barat 40625",
     location: {
       lat: -6.8936106,
       lng: 107.7425512,
@@ -25,11 +26,11 @@ const DUMMY_PLACES = [
   },
   {
     id: "p2",
-    title: "Empire State Building",
-    description: "One of the most famous sky scrapers in the world!",
+    judul: "Empire State Building",
+    deskripsi: "One of the most famous sky scrapers in the world!",
     imageUrl:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg",
-    address: "20 W 34th St, New York, NY 10001",
+    alamat: "20 W 34th St, New York, NY 10001",
     location: {
       lat: 40.7484405,
       lng: -73.9878584,
@@ -40,7 +41,31 @@ const DUMMY_PLACES = [
 
 const UpdatePlace = () => {
   const placeId = useParams().placeId;
+
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
+
+  const [formState, inputHandler] = useForm(
+    {
+      judul: {
+        value: identifiedPlace.judul,
+        isValid: true,
+      },
+      deskripsi: {
+        value: identifiedPlace.deskripsi,
+        isValid: true,
+      },
+      alamat: {
+        value: identifiedPlace.alamat,
+        isValid: true,
+      },
+    },
+    true
+  );
+
+  const placeSubmitHandler = (event) => {
+    event.preventDefault();
+    console.log(formState.inputs);
+  };
 
   if (!identifiedPlace) {
     return (
@@ -49,17 +74,19 @@ const UpdatePlace = () => {
       </div>
     );
   }
+
   return (
-    <form className="place-form">
+    <form className="place-form" onSubmit={placeSubmitHandler}>
       <Input
         id="judul"
         type="text"
         label="Judul"
         element="input"
         validators={[VALIDATOR_REQUIRE()]}
-        onInput={() => {}}
+        onInput={inputHandler}
         errorText="Masukkan judul"
-        valid={true}
+        value={formState.inputs.judul.value}
+        valid={formState.inputs.judul.isValid}
       />
       <Input
         id="deskripsi"
@@ -67,19 +94,21 @@ const UpdatePlace = () => {
         element="textarea"
         validators={[VALIDATOR_MINLENGTH(5)]}
         errorText="Masukkan minimal lima karakter"
-        onInput={() => {}}
-        valid={true}
+        onInput={inputHandler}
+        value={formState.inputs.deskripsi.value}
+        valid={formState.inputs.deskripsi.isValid}
       />
       <Input
         id="alamat"
         label="Alamat"
         element="textarea"
         validators={[VALIDATOR_REQUIRE()]}
-        onInput={() => {}}
+        onInput={inputHandler}
         errorText="Masukkan alamat"
-        valid={true}
+        value={formState.inputs.alamat.value}
+        valid={formState.inputs.alamat.isValid}
       />
-      <Button type="submit" type="submit" disabled={true}>
+      <Button type="submit" disabled={!formState.isValid}>
         Tambahkan Tempat
       </Button>
     </form>
