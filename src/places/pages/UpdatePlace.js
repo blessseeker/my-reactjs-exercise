@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
@@ -40,27 +40,49 @@ const DUMMY_PLACES = [
 ];
 
 const UpdatePlace = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const placeId = useParams().placeId;
+
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      judul: {
+        value: "",
+        isValid: false,
+      },
+      deskripsi: {
+        value: "",
+        isValid: false,
+      },
+      alamat: {
+        value: "",
+        isValid: false,
+      },
+    },
+    false
+  );
 
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
 
-  const [formState, inputHandler] = useForm(
-    {
-      judul: {
-        value: identifiedPlace.judul,
-        isValid: true,
+  useEffect(() => {
+    setFormData(
+      {
+        judul: {
+          value: identifiedPlace.judul,
+          isValid: true,
+        },
+        deskripsi: {
+          value: identifiedPlace.deskripsi,
+          isValid: true,
+        },
+        alamat: {
+          value: identifiedPlace.alamat,
+          isValid: true,
+        },
       },
-      deskripsi: {
-        value: identifiedPlace.deskripsi,
-        isValid: true,
-      },
-      alamat: {
-        value: identifiedPlace.alamat,
-        isValid: true,
-      },
-    },
-    true
-  );
+      true
+    );
+    setIsLoading(false);
+  }, [setFormData, identifiedPlace]);
 
   const placeSubmitHandler = (event) => {
     event.preventDefault();
@@ -71,6 +93,14 @@ const UpdatePlace = () => {
     return (
       <div className="center">
         <h2>Tempat tidak ditemukan</h2>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        <h2>Sedang memuat</h2>
       </div>
     );
   }
@@ -109,7 +139,7 @@ const UpdatePlace = () => {
         valid={formState.inputs.alamat.isValid}
       />
       <Button type="submit" disabled={!formState.isValid}>
-        Tambahkan Tempat
+        Simpan Perubahan
       </Button>
     </form>
   );
