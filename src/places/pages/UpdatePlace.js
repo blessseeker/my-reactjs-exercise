@@ -7,6 +7,7 @@ import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
 } from "../../shared/util/validators";
+import "./PlaceForm.css";
 
 const DUMMY_PLACES = [
   {
@@ -49,13 +50,14 @@ const UpdatePlace = () => {
     );
   }
   return (
-    <form>
+    <form className="place-form">
       <Input
         id="judul"
         type="text"
         label="Judul"
         element="input"
         validators={[VALIDATOR_REQUIRE()]}
+        onInput={() => {}}
         errorText="Masukkan judul"
         valid={true}
       />
@@ -65,6 +67,7 @@ const UpdatePlace = () => {
         element="textarea"
         validators={[VALIDATOR_MINLENGTH(5)]}
         errorText="Masukkan minimal lima karakter"
+        onInput={() => {}}
         valid={true}
       />
       <Input
@@ -72,10 +75,13 @@ const UpdatePlace = () => {
         label="Alamat"
         element="textarea"
         validators={[VALIDATOR_REQUIRE()]}
+        onInput={() => {}}
         errorText="Masukkan alamat"
         valid={true}
       />
-      <Button type="submit">Tambahkan Tempat</Button>
+      <Button type="submit" type="submit" disabled={true}>
+        Tambahkan Tempat
+      </Button>
     </form>
   );
 };
