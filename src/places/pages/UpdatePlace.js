@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import Card from "../../shared/components/UIElements/Card";
 import { useForm } from "../../shared/hooks/form";
 import {
   VALIDATOR_REQUIRE,
@@ -64,23 +65,25 @@ const UpdatePlace = () => {
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
 
   useEffect(() => {
-    setFormData(
-      {
-        judul: {
-          value: identifiedPlace.judul,
-          isValid: true,
+    if (identifiedPlace) {
+      setFormData(
+        {
+          judul: {
+            value: identifiedPlace.judul,
+            isValid: true,
+          },
+          deskripsi: {
+            value: identifiedPlace.deskripsi,
+            isValid: true,
+          },
+          alamat: {
+            value: identifiedPlace.alamat,
+            isValid: true,
+          },
         },
-        deskripsi: {
-          value: identifiedPlace.deskripsi,
-          isValid: true,
-        },
-        alamat: {
-          value: identifiedPlace.alamat,
-          isValid: true,
-        },
-      },
-      true
-    );
+        true
+      );
+    }
     setIsLoading(false);
   }, [setFormData, identifiedPlace]);
 
@@ -92,7 +95,9 @@ const UpdatePlace = () => {
   if (!identifiedPlace) {
     return (
       <div className="center">
-        <h2>Tempat tidak ditemukan</h2>
+        <Card>
+          <h2>Tempat tidak ditemukan</h2>
+        </Card>
       </div>
     );
   }
