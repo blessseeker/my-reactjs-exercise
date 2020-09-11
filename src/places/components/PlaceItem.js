@@ -9,9 +9,25 @@ import "./PlaceItem.css";
 const PlaceItem = (props) => {
   const [showMap, setShowMap] = useState(false);
 
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
   const openMapHandler = () => setShowMap(true);
 
   const closeMapHandler = () => setShowMap(false);
+
+  const showDeleteWarningHandler = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const cancelDeleteWarningHandler = () => {
+    setShowDeleteConfirm(false);
+  };
+
+  const confirmDeleteHandler = () => {
+    setShowDeleteConfirm(false);
+    console.log("SEDANG MENGHAPUS ....");
+  };
+
   return (
     <React.Fragment>
       <Modal
@@ -24,6 +40,26 @@ const PlaceItem = (props) => {
       >
         <div className="map-container">
           <Map center={props.coordinates} zoom={16} />
+        </div>
+      </Modal>
+      <Modal
+        show={showDeleteConfirm}
+        onCancel={cancelDeleteWarningHandler}
+        header="Apakah Anda yakin?"
+        footerClass="place-item__modal-actions"
+        footer={
+          <React.Fragment>
+            <Button inverse onClick={cancelDeleteWarningHandler}>
+              Batal
+            </Button>
+            <Button danger onClick={confirmDeleteHandler}>
+              Ya
+            </Button>
+          </React.Fragment>
+        }
+      >
+        <div>
+          <p>Apakah Anda yakin akan menghapus tempat ini?</p>
         </div>
       </Modal>
       <li className="place-item">
@@ -41,7 +77,9 @@ const PlaceItem = (props) => {
               VIEW ON MAP
             </Button>
             <Button to={`/places/${props.id}`}>EDIT</Button>
-            <Button danger>DELETE</Button>
+            <Button danger onClick={showDeleteWarningHandler}>
+              DELETE
+            </Button>
           </div>
         </Card>
       </li>
