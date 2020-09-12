@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
+  VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form";
 
 import "./Auth.css";
 
 const Auth = () => {
-  const [formState, inputHandler] = useForm({
+  const [isLoginMode, setIsLoginMode] = useState(true);
+
+  const [formState, inputHandler, setFormData] = useForm({
     email: {
       value: "",
       isValid: false,
@@ -27,10 +30,45 @@ const Auth = () => {
     console.log(formState.inputs);
   };
 
+  const switchModeHandler = () => {
+    if (!isLoginMode) {
+      setFormData(
+        {
+          ...formState.inputs,
+          nama: undefined,
+        },
+        formState.inputs.email.isValid && formState.inputs.password.isValid
+      );
+    } else {
+      setFormData(
+        {
+          ...formState.inputs,
+          nama: {
+            value: "",
+            isValid: false,
+          },
+        },
+        false
+      );
+    }
+    setIsLoginMode((prevMode) => !prevMode);
+  };
+
   return (
     <Card className="authentication">
       <h2>Silakan melakukan login</h2>
       <form onSubmit={submitHandler}>
+        {!isLoginMode && (
+          <Input
+            id="nama"
+            element="input"
+            type="text"
+            label="Nama Lengkap"
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Harap isi dengan nama lengkap Anda"
+            onInput={inputHandler}
+          />
+        )}
         <Input
           id="email"
           element="input"
@@ -50,9 +88,12 @@ const Auth = () => {
           onInput={inputHandler}
         />
         <Button type="submit" disabled={!formState.isValid}>
-          LOGIN
+          {isLoginMode ? "LOGIN" : "DAFTAR"}
         </Button>
       </form>
+      <Button inverse onClick={switchModeHandler}>
+        {isLoginMode ? "SAYA BELUM DAFTAR" : "SAYA SUDAH PUNYA AKUN"}
+      </Button>
     </Card>
   );
 };
