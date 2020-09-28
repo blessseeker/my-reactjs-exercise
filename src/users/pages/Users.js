@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import UsersList from "../components/UsersList";
+import { useHttpClient } from "../../shared/hooks/http";
 
 const Users = () => {
   const [isLoading, setIsLoading] = useState(false);
