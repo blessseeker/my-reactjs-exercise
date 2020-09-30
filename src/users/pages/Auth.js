@@ -11,7 +11,7 @@ import {
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form";
-import { AuthContext } from "../../shared/components/context/auth-context";
+import { AuthContext } from "../../shared/context/auth-context";
 
 import "./Auth.css";
 
@@ -36,7 +36,7 @@ const Auth = () => {
 
     if (isLoginMode) {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "http://localhost:5000/api/users/login",
           "POST",
           JSON.stringify({
@@ -48,7 +48,7 @@ const Auth = () => {
           }
         );
 
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (err) {}
     } else {
       try {
